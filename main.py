@@ -3,6 +3,32 @@ import streamlit as st
 import pyrebase
 import pandas as pd
 import numpy as np
+import folium
+from streamlit_folium import folium_static 
+import json
+
+
+# API
+import requests
+import json
+import os
+
+def getData():
+    # connexion avec l'API
+    url = 'https://services6.arcgis.com/C0HVLQJI37vYnazu/arcgis/rest/services/Estimate_of_Plastic_Pollution_in_the_World_s_Oceans_1_01_4_75/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json'
+    response = requests.get(url)
+    data = json.loads(response.text)
+    #print(data)
+    for feature in data["features"]:
+        attr = feature["attributes"]
+        #st.write(
+        #    attr["LATITUDE"])
+        print(attr["LONGITUDE"])
+        print(attr["CD1____KM_"])
+        print(attr["CD2____KM_"])
+        print(attr["CD3____KM_"])
+        print("--------------")
+    return data
 
 firebaseConfig = {
     'apiKey': "AIzaSyAwsnONm1QsLfgvklBHl8e38aKklatteu0",
@@ -34,6 +60,9 @@ statistique = st.sidebar.button('statistique')
 detection = st.sidebar.button('détecter les débris')
 about_us = st.sidebar.button('Qui somme-nous')
 choice = st.sidebar.selectbox('Se connecter/Créer un compte', ['Se connecter', 'Créer un compte'])
+
+
+   
 
 ### statistique
 if statistique:
@@ -73,11 +102,52 @@ if about_us:
          ### Tamega bougary : Product Owner
          """)
 
+
+def get_data(url):
+    return json.load(open(url))
+ 
 if home:
+    
     st.title("Clean Ocean")
     st.write("""
          # Grace À Notre Site Vous Pouvez Détécter Facilement Les Plastiques Dans Les Océans
          """)
+    # data = pd.read_csv('cities.csv')
+    
+    map = folium.Map(
+        location=[45.5236, -3],
+        zoom_start=2
+        )
+    
+    
+    data_api = getData()
+    print('DATA : ' + str(data_api))
+    
+    data = [
+        {
+            'name': 'Bilbao',
+            'latitude': 40,
+            'longitude': -5,
+            'color': 'pink'
+        }
+    ]
+    for item in data_api['features']:
+        folium.Circle(
+            location=[item['attributes']['LATITUDE'], item['attributes']['LONGITUDE']],
+            popup=item['attributes']['CD3____KM_'],
+            tooltip=item['attributes']['CD3____KM_'],
+            color= 'pink'
+        ).add_to(map)
+    folium.CircleMarker(
+        radius=50,
+        fill_color="#3186cc",
+            location=[60, 5],
+            popup='guess',
+            tooltip='guess',
+            icon=folium.Icon(color='red', prefix='fa',
+                             icon='circle')
+    ).add_to(map)
+    folium_static(map)
 
 if choice == 'Créer un compte':
     email = st.sidebar.text_input('entrer votre email')
@@ -106,6 +176,9 @@ if choice == 'Se connecter':
         st.title('Bienvenue dans clean ocean')
         
         
-        
+getData()  
+    
+
+    
         
        
