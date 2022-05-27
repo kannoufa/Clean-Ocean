@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Ocean</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="../../static/css/style-app.css">
+
+</head>
+<body>
+    
+    <ul>
+        <li>
+            <a href="http://localhost:5000/" class="logo"></span>Clean<span class="fas fa-water"></span>Ocean</a>
+        </li>
+        <li>
+            <a href="http://localhost:5000/">Accueil</a>
+        </li>   
+        <li>
+            <a href="http://localhost:5000/#doctor">Qui sommes-nous</a>
+        </li>   
+        <li>
+            <a href="#" onclick="setURL('http://localhost:8501/?p=statistiques')">Statistiques</a>
+        </li> 
+        <li>
+            <a href="#" onclick="setURL('http://localhost:8501/?p=detection-debris')">Detection de débris</a>
+        </li>
+        <li>
+            <a href="#" onclick="setURL('http://localhost:8501/?p=login')">Se connecter</a>
+        </li>
+        <li>
+            <a href="#" onclick="setURL('http://localhost:8501/?p=signup')">Créer un compte</a>
+        </li>
+
+    </ul>
+
+    <iframe src="http://localhost:8501/?p={{section}}" id="streamlit_content" allowfullscreen frameborder="0"
+        wmode="transparent">
+        Your browser doesn't support iframes
+    </iframe>
+
+</body>
+
+<script>
+    function setURL(url) {
+      document.getElementById('streamlit_content').src = url;
+      console.log('Works!')
+    }
+</script>
+
+</html>
